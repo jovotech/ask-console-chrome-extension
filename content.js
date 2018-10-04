@@ -74,7 +74,7 @@ function saveButton(text) {
         } else {
             const obj = {
                 buttons: {
-                    [lang]: [text]
+                    [locale]: [text]
                 },
             };
             chrome.storage.sync.set({[skillId]: obj}, function() {
