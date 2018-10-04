@@ -2,6 +2,8 @@
 
 > Speed up Alexa Skill testing in the Alexa Skill Console
 
+![Alexa Skill Developer Console Simulator Chrome Extension](https://media.giphy.com/media/YiJ9cNwNL1UaOjjFYI/giphy.gif)
+
 Tired of typing countless commands into the Alexa Simulator?
 
 * Click "resend" next to a message instead of typing again
