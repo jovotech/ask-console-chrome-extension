@@ -4,7 +4,7 @@
   "description": "Speed up Alexa Skill testing in the Alexa Skill Console",
   "version": "1.0",
   "icons": {
-    "128": "icon_128.png"
+    "128": "/img/icon_128.png"
   },
   "content_scripts": [{
     "matches":    ["https://developer.amazon.com/alexa/console/ask/test/*"],
