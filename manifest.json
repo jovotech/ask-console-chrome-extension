@@ -5,9 +5,6 @@
   "icons": {
     "128": "icon_128.png"
   },
-  "background": {
-    "scripts": ["jquery-3.2.1.min.js","main.js"]
-  },
   "content_scripts": [{
     "matches":    ["https://developer.amazon.com/alexa/console/ask/test/*"],
     "js":         ["jquery-3.2.1.min.js", "content.js"],
