@@ -1,0 +1,47 @@
+.request-buttons {
+    margin-bottom: 10px;
+}
+
+.asksos-button {
+    background-color: #fafafa;
+    outline: none;
+    border: 1px solid #e8e8e8;
+    padding: 7px;
+    color: #595959;
+    margin-bottom: 4px;
+}
+
+.asksos-button:hover {
+    cursor: pointer;
+    background-color: #f3f3f3;
+}
+
+.asksos-button.post {
+
+}
+
+.asksos-button.delete {
+
+    margin-left: -2px;
+    margin-right: 10px;
+}
+span.asksos-action-icon {
+    position: absolute;
+    cursor: pointer;
+    color: black;
+    width:40px;
+    text-align:center;
+    opacity: 0.4;
+}
+span.asksos-action-icon:hover {
+    opacity: 0.95;
+}
+
+
+span.repost {
+    left: -38px;
+
+}
+span.save {
+    left: -68px;
+}
