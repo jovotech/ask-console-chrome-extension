@@ -8,37 +8,13 @@ const skillId = location.href.split('/')[7];
 let localeButtons;
 let locale = location.href.split('/')[9].substring(0, 2);
 
-$(".askt-dialog").bind("DOMNodeInserted",function(el){
-    if($(el.target).hasClass('askt-dialog__message') &&
-        $(el.target).hasClass('askt-dialog__message--request')) {
-        $(el.target).prepend(`<span class="asksos-action-icon repost" title="Repost">${redoImage}</span>`);
-
-        // show, if it is not saved already
-        if (!localeButtons || !localeButtons.includes($(el.target).parent().text())) {
-            $(el.target).prepend(`<span class="asksos-action-icon save" title="Add request button">${saveImage}</span>`);
-        }
-    }
-});
 
 $(document).ready(function () {
-    $('<div class="request-buttons"></div>').insertAfter('.askt-simulator__input');
+
     initButtons();
 
-    $('.request-buttons').on('click','button.post', function() {
-        postText($(this).val());
-    });
-    $('.request-buttons').on('click','button.remove', function() {
-        removeButton($(this).val());
-    });
-
-    $('.askt-dialog').on('click', '.repost', function() {
-        const text = $(this).parent().text();
-        postText(text);
-    });
-
-    $('.askt-dialog').on('click', '.save', function() {
-        const text = $(this).parent().text();
-        saveButton(text);
+    $('input#astro-radio-1').on('change', function () {
+        initButtons();
     });
 
     $("body").on('DOMSubtreeModified', ".askt-alexa-lang .Select-control .Select-value-label", function() {
@@ -58,6 +34,9 @@ $(document).ready(function () {
  * Gets buttons from storage and adds to container
  */
 function initButtons() {
+    if ($('div.request-buttons').length === 0) {
+        $('<div class="request-buttons"></div>').insertAfter('.askt-simulator__input');
+    }
     $('.request-buttons').html('');
     chrome.storage.sync.get([skillId], function(result) {
         if (result && result[skillId] && result[skillId].buttons) {
@@ -68,6 +47,37 @@ function initButtons() {
                 });
             }
         }
+    });
+
+    $('.request-buttons').off();
+    $('.request-buttons').on('click','button.post', function() {
+        postText($(this).val());
+    });
+    $('.request-buttons').on('click','button.remove', function() {
+        removeButton($(this).val());
+    });
+
+
+    $(".askt-dialog").bind("DOMNodeInserted",function(el){
+        if($(el.target).hasClass('askt-dialog__message') &&
+            $(el.target).hasClass('askt-dialog__message--request')) {
+            $(el.target).prepend(`<span class="asksos-action-icon repost" title="Repost">${redoImage}</span>`);
+
+            // show, if it is not saved already
+            if (!localeButtons || !localeButtons.includes($(el.target).parent().text())) {
+                $(el.target).prepend(`<span class="asksos-action-icon save" title="Add request button">${saveImage}</span>`);
+            }
+        }
+    });
+    // $('.askt-dialog').off();
+    $('.askt-dialog').on('click', '.repost', function() {
+        const text = $(this).parent().text();
+        postText(text);
+    });
+
+    $('.askt-dialog').on('click', '.save', function() {
+        const text = $(this).parent().text();
+        saveButton(text);
     });
 }
 
@@ -149,7 +159,6 @@ function saveButton(text) {
             });
         }
     });
-
 }
 
 
