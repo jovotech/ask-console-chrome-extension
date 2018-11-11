@@ -7,6 +7,7 @@ const saveImage = `<img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0i
 const skillId = location.href.split('/')[7];
 let localeButtons;
 let locale = location.href.split('/')[9].substring(0, 2);
+let historyIndex = -1;
 
 $(".askt-dialog").bind("DOMNodeInserted",function(el){
     if($(el.target).hasClass('askt-dialog__message') &&
@@ -17,6 +18,9 @@ $(".askt-dialog").bind("DOMNodeInserted",function(el){
         if (!localeButtons || !localeButtons.includes($(el.target).parent().text())) {
             $(el.target).prepend(`<span class="asksos-action-icon save" title="Add request button">${saveImage}</span>`);
         }
+
+        //add to history
+        addToHistory($(el.target).parent().text());
     }
 });
 
@@ -40,6 +44,28 @@ $(document).ready(function () {
         const text = $(this).parent().text();
         saveButton(text);
     });
+
+    $(".askt-utterance__input").keydown(function(e) {         
+        chrome.storage.sync.get([skillId], function(result) {
+            if (result && result[skillId] && result[skillId].history) {
+                commandHistory = result[skillId].history[locale];
+                if(commandHistory) {
+                    switch(e.key) {
+                        case "ArrowUp": historyIndex < commandHistory.length-1 ? historyIndex ++ : historyIndex = 0; break;
+                        case "ArrowDown": historyIndex > 0 ? historyIndex-- : historyIndex = 0; break;
+                        default: return;
+                    }
+                }
+                
+                // Trigger the change event on the input
+                var ev = new Event('input', { bubbles: true});
+                ev.simulated = true;
+                $(".askt-utterance__input")[0].value = commandHistory[historyIndex];
+                $(".askt-utterance__input")[0].dispatchEvent(ev);
+            }
+        });
+    });
+
 
     $("body").on('DOMSubtreeModified', ".askt-alexa-lang .Select-control .Select-value-label", function() {
         // workaround! there is always a delay
@@ -117,6 +143,45 @@ function postText(text) {
 }
 
 /**
+ * Add new entry to history
+ * @param text
+ */
+function addToHistory(text) {
+    // Get object for given skill id
+    chrome.storage.sync.get([skillId], function(result) {
+        // Set index back to starting point
+        historyIndex = -1;
+
+        if (result && result[skillId] && result[skillId].history) {
+            commandHistory = result[skillId].history[locale];
+
+            // Add entry to front, and remove it if already exists
+            if (commandHistory) {
+                let index = commandHistory.indexOf(text);
+                if (index >= 0) {
+                    commandHistory.splice(index, 1);
+                } 
+                // Cap length at 50 to prevent this from growing too large.
+                if (commandHistory.length > 50) {
+                    commandHistory.length = 50;
+                }
+                commandHistory.unshift(text);
+            } else {
+                result[skillId].buttons[history] = [text];
+            }
+            chrome.storage.sync.set({[skillId]: result[skillId]});
+        } else { // create new object for given skill id
+            const obj = {
+                history: {
+                    [locale]: [text]
+                },
+            };
+            chrome.storage.sync.set({[skillId]: obj});
+        }
+    });
+}
+
+/**
  * Saves button to synced chrome storage
  * @param text
  */
@@ -149,9 +214,7 @@ function saveButton(text) {
             });
         }
     });
-
 }
-
 
 // clears storage
 // chrome.storage.sync.clear(function(result) {
