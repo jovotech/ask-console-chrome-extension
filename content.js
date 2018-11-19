@@ -7,7 +7,7 @@ const saveImage = `<img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0i
 const skillId = location.href.split('/')[7];
 let localeButtons;
 let locale = location.href.split('/')[9].substring(0, 2);
-
+let historyIndex = -1;
 
 $(document).ready(function () {
 
@@ -67,6 +67,8 @@ function initButtons() {
             if (!localeButtons || !localeButtons.includes($(el.target).parent().text())) {
                 $(el.target).prepend(`<span class="asksos-action-icon save" title="Add request button">${saveImage}</span>`);
             }
+            //add to history
+            addToHistory($(el.target).parent().text());
         }
     });
     // $('.askt-dialog').off();
@@ -79,6 +81,28 @@ function initButtons() {
         const text = $(this).parent().text();
         saveButton(text);
     });
+
+    $(".askt-utterance__input").keydown(function(e) {
+        chrome.storage.sync.get([skillId], function(result) {
+            if (result && result[skillId] && result[skillId].history) {
+                commandHistory = result[skillId].history[locale];
+                if(commandHistory) {
+                    switch(e.key) {
+                        case "ArrowUp": historyIndex < commandHistory.length-1 ? historyIndex ++ : historyIndex = 0; break;
+                        case "ArrowDown": historyIndex > 0 ? historyIndex-- : historyIndex = 0; break;
+                        default: return;
+                    }
+                }
+
+                // Trigger the change event on the input
+                var ev = new Event('input', { bubbles: true});
+                ev.simulated = true;
+                $(".askt-utterance__input")[0].value = commandHistory[historyIndex];
+                $(".askt-utterance__input")[0].dispatchEvent(ev);
+            }
+        });
+    });
+
 }
 
 /**
@@ -145,13 +169,23 @@ function saveButton(text) {
             } else {
                 result[skillId].buttons[locale] = [text];
             }
-            chrome.storage.sync.set({[skillId]: result[skillId]}, function() {
+            chrome.storage.sync.set({[skillId]: result[skillId]}, function () {
+                addButton(text);
+            });
+        } else if (result && result[skillId]) {
+            result[skillId].buttons = {
+                [locale]: [text]
+            };
+            chrome.storage.sync.set({[skillId]: result[skillId]}, function () {
                 addButton(text);
             });
         } else { // create new object for given skill id
             const obj = {
                 buttons: {
                     [locale]: [text]
+                },
+                history: {
+                    [locale]: []
                 },
             };
             chrome.storage.sync.set({[skillId]: obj}, function() {
@@ -160,8 +194,53 @@ function saveButton(text) {
         }
     });
 }
+//
+/**
+* Add new entry to history
+* @param text
+*/
+function addToHistory(text) {
+    // Get object for given skill id
+    chrome.storage.sync.get([skillId], function(result) {
+        // Set index back to starting point
+        historyIndex = -1;
+        if (result && result[skillId] && result[skillId].history) {
+            commandHistory = result[skillId].history[locale];
+            // Add entry to front, and remove it if already exists
+            if (commandHistory) {
+                let index = commandHistory.indexOf(text);
+                if (index >= 0) {
+                    commandHistory.splice(index, 1);
+                }
+                // Cap length at 50 to prevent this from growing too large.
+                if (commandHistory.length > 50) {
+                    commandHistory.length = 50;
+                }
+                commandHistory.unshift(text);
+            } else {
+                result[skillId].history[locale] = [text];
+            }
+            chrome.storage.sync.set({[skillId]: result[skillId]});
+        } else if (result && result[skillId]) { // create new object for given skill id
 
+            result[skillId].history = {
+                [locale]: [text]
+            };
 
+            chrome.storage.sync.set({[skillId]: result[skillId]});
+        } else {
+            const obj = {
+                buttons: {
+                    [locale]: []
+                },
+                history: {
+                    [locale]: [text]
+                },
+            };
+            chrome.storage.sync.set({[skillId]: obj})
+        }
+    });
+}
 // clears storage
 // chrome.storage.sync.clear(function(result) {
 // });
