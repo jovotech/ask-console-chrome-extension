@@ -11,6 +11,8 @@ let historyIndex = -1;
 
 $(document).ready(function () {
 
+    draggableSideBar();
+
     initButtons();
 
     $('input#astro-radio-1').on('change', function () {
@@ -241,6 +243,25 @@ function addToHistory(text) {
         }
     });
 }
-// clears storage
-// chrome.storage.sync.clear(function(result) {
-// });
+
+function draggableSideBar() {
+    $('.askt-input').append('<div id="dragbar"></div>');
+    let dragging = false;
+   $('#dragbar').on('mousedown', function(e) {
+       e.preventDefault();
+       dragging = true;       
+       $(document).on('mousemove', function(e){
+           const percentage = (e.pageX / window.innerWidth) * 100;
+           const mainPercentage = 100 - percentage;
+           $('.askt-input').css("width", percentage + "%");
+           $('.askt-output').css("width", mainPercentage + "%");
+       });
+    });
+
+   $(document).on('mouseup', function(e){
+       if (dragging) {
+           $(document).unbind('mousemove');
+           dragging = false;
+       }
+    });
+} 

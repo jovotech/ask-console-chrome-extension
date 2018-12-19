@@ -45,3 +45,11 @@ span.repost {
 span.save {
     left: -68px;
 }
+
+div#dragbar {
+    background-color:transparent;
+    height:100%;
+    float: right;
+    width: 2px;
+    cursor: col-resize;
+} 
