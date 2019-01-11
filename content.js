@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     initButtons();
 
-    $('input#astro-radio-1').on('change', function () {
+    $('.askt-input div.astro-form-group-fields label:first-child input').on('change', function () {
         initButtons();
     });
 
