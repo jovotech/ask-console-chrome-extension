@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Alexa Skills Kit Simulator Enhancer",
   "description": "Speed up Alexa Skill testing in the Alexa Skill Console",
-  "version": "1.1",
+  "version": "1.2",
   "icons": {
     "48": "/img/icon_48.png",
     "128": "/img/icon_128.png"
