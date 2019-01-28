@@ -11,8 +11,14 @@ Tired of typing countless commands into the Alexa Simulator?
 
 ## Installation
 
+### Option 1: Chrome Web Store
+
+You can find this extension in the Chrome Web Store
+
+### Option 2: Manual Installation
+
 1. Clone or download this repository and unzip it: https://github.com/jovotech/ask-console-chrome-extension/archive/master.zip
-2. Go to your Chrome extensions either through the menue or by pasting this into your browser: `//chrome://extensions/`
+2. Go to your Chrome extensions either through the menue or by pasting this into your browser: `//chrome://extensions/` (or: `chrome://extensions/`)
 3. Click `Load unpacked` and upload the unzipped folder
 4. Go to the Alexa Developer Console at https://developer.amazon.com/alexa/console/ask and try it out with one of your Skills!
 
