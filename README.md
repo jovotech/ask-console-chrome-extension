@@ -13,7 +13,7 @@ Tired of typing countless commands into the Alexa Simulator?
 
 ### Option 1: Chrome Web Store
 
-You can find this extension in the Chrome Web Store
+You can find this extension in the Chrome Web Store: https://chrome.google.com/webstore/detail/alexa-skills-kit-simulato/opjjjciodammljgdambcjmljkcjblkkk
 
 ### Option 2: Manual Installation
 
