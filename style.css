@@ -68,9 +68,7 @@ div#dragbar {
 
 .ui-sortable-helper {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    /*transform: rotate(5deg);*/
     background-color: #f6f6f6;
-
     -webkit-transform-style: preserve-3d;
     -webkit-transform: rotateZ(-2deg);
 }
