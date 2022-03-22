@@ -127,6 +127,8 @@ function initButtons() {
     $(".askt-dialog").bind("DOMNodeInserted",function(el){
         if($(el.target).hasClass('askt-dialog__message') &&
             $(el.target).hasClass('askt-dialog__message--request')) {
+
+            $(el.target).parent().find('.askt-dialog__icon--plus').remove();
             $(el.target).prepend(`<span class="asksos-action-icon repost" title="Repost">${redoImage}</span>`);
 
             // show, if it is not saved already
@@ -203,17 +205,18 @@ function removeButton(button) {
  */
 function postText(text) {
 
-    $('.askt-utterance__input').val(text).change();
+    console.log('posting: ' + text);
+    $('.react-autosuggest__input').val(text).change();
 
     // trigger input
-    $('.askt-utterance__input')[0].dispatchEvent(new Event("input", { 'bubbles': true,'cancelable': true }));
-    $('.askt-utterance__input').focus();
+    $('.react-autosuggest__input')[0].dispatchEvent(new Event("input", { 'bubbles': true,'cancelable': true }));
+    $('.react-autosuggest__input').focus();
 
     // trigger press on enter
     const keypress = new KeyboardEvent("keypress", {
         bubbles: true, cancelable: true, keyCode: 13, key: 'Enter'
     });
-    $('.askt-utterance__input')[0].dispatchEvent(keypress);
+    $('.react-autosuggest__input')[0].dispatchEvent(keypress);
 }
 
 /**
