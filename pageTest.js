@@ -150,7 +150,7 @@ function initButtons() {
         saveButton(text);
     });
 
-    $(".askt-utterance__input").keydown(function(e) {
+    $(".react-autosuggest__input").keydown(function(e) {
         chrome.storage.sync.get([skillId], function(result) {
             if (result && result[skillId] && result[skillId].history) {
                 commandHistory = result[skillId].history[locale];
@@ -165,8 +165,8 @@ function initButtons() {
                 // Trigger the change event on the input
                 var ev = new Event('input', { bubbles: true});
                 ev.simulated = true;
-                $(".askt-utterance__input")[0].value = commandHistory[historyIndex];
-                $(".askt-utterance__input")[0].dispatchEvent(ev);
+                $(".react-autosuggest__input")[0].value = commandHistory[historyIndex];
+                $(".react-autosuggest__input")[0].dispatchEvent(ev);
             }
         });
     });
